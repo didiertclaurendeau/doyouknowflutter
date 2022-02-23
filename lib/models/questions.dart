@@ -47,6 +47,20 @@ printName(String name, {String? lastName}){
     "point": 1
   },
   {
+    "source": "Mathieu", //Manolo was here
+    "Question": """
+    Comment est-ce qu'on peut rendre un fonction asynchrone?
+""",
+    "Choix": [
+      "Ajouter des 'await' dans notre fonction",
+      "Ajouter 'async' à la signature de la fonction",
+      "Ajouter 'async' à la signature de la fonction et des 'await' dans notre fonction",
+      "Ajouter des 'wait' dans notre fonction"
+    ],
+    "reponse": 3,
+    "point": 1
+  },
+  {
     "source": "Yan",
     "Question": """
 quels sont les composants coulissants?

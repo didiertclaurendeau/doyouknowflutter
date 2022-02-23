@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'models/questions.dart';
+import 'widgets/questionnaire.dart';
+import 'widgets/resultats.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -7,7 +11,7 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+  // This widget is the root of your applica
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,23 +42,63 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  var _testDebut = false;
+  var _questionCourant = 0;
+  var _pointTotal = 0;
+
+  _reponseAQuestion(int reponseId) {
+    print("Recu reponse $reponseId");
+    setState(() {
+      if (reponseId + 1 == listeDeQuestions[_questionCourant]["reponse"]) {
+        _pointTotal += listeDeQuestions[_questionCourant]["point"] as int;
+        print("Point actuel $_pointTotal");
+      }
+      _questionCourant++;
+    });
+  }
+
+  void _recommenceTest() {
+    setState(() {
+      _testDebut = false;
+      _questionCourant = 0;
+      _pointTotal = 0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(widget.title),
+            //Spacer(),
+            Text("$_questionCourant/${listeDeQuestions.length}"),
+          ],
+        ),
       ),
       body: Center(
-        child: Text("Debut ici"),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+        child: (_testDebut)
+            ? (_questionCourant < listeDeQuestions.length)
+                ? Questionnaire(_questionCourant, _reponseAQuestion)
+                : Resultats(_pointTotal, listeDeQuestions.length,
+                    _recommenceTest) //Resultats(_pointTotal, listeDeQuestions.fold(0, (previousValue, element) => previousValue! + element["point"] as int))
+            : Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text("Debut ici"),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _testDebut = true;
+                      });
+                    },
+                    child: Text("Debuut le test"),
+                  ),
+                ],
+              ),
+      ),
     );
   }
 }
